@@ -113,11 +113,26 @@ public class Algorithm {
 				}
 			}
 
-			Iris tempHighest;
-			Double tempHighestDouble;
-			
 
+			Object[] mapKeyArray = keySet.toArray();
+			Iris[] castArray = (Iris[]) mapKeyArray;
 
+			Iris tempHighest = null;
+			Double tempHighestDouble = null;
+
+			if(tempHighest == null || tempHighestDouble == null){ //If there is no values
+				tempHighest = castArray[0]; //Get the first value
+				tempHighestDouble = test.getNeighbours().get(tempHighest); //get the distance
+			}
+			for(Iris h : castArray){
+				System.out.println("The petal widths of the Irises in the array after its been cast are: " + h.getPetalWidth()); //Bugchecks to make sure the elements in the final array survived after being converted to a set, then made generic, then typecast again.
+				if(test.getNeighbours().get(h) > tempHighestDouble.doubleValue()){
+					tempHighest = h;
+					tempHighestDouble = test.getNeighbours().get(h);
+				}
+			}
+			//The highest of the neighbours has now been found, so remove it from the hashmap in the test Iris
+			test.getNeighbours().remove(tempHighest);
 
 
 
