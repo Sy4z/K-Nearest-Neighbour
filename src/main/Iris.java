@@ -1,6 +1,7 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -21,7 +22,7 @@ public class Iris {
 	double petalLength;
 	double petalWidth;
 	boolean isTraining = false;
-	List<Iris> nearestNeighbours = new ArrayList<Iris>(); //This will only be needed if this is from the test set. Contains a set of the K nearest neighbours to this Iris. These will be used in classification of the Iris
+	HashMap<Iris, Double> nearestNeighbours = new HashMap<Iris, Double>();
 
 	/**
 	 * All Parameters are measured in Centimeters(Cm)	
@@ -130,5 +131,20 @@ public class Iris {
 	}
 
 
+	/**
+	 * Adds an Iris to the set of nearest neighbours. Used by Algorithm
+	 * @param neighbour
+	 */
+	public void addNeighbour(Iris neighbour, double distance){
+		nearestNeighbours.put(neighbour, new Double(distance));
+	}
+	
+	/**
+	 * Returns the list of nearest neighbours so Algorithm can see it.
+	 * @return
+	 */
+	public HashMap<Iris, Double> getNeighbours(){
+		return nearestNeighbours;
+	}
 
 }

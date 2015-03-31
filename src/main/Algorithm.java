@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Algorithm {
 
@@ -22,9 +23,9 @@ public class Algorithm {
 
 	public Algorithm(File testSetFile, File trainingSetFile) {
 		//Build TestSet from File
-		enumerateFromFile(testSetFile, this.testSet);
+		enumerateFromFile(testSetFile, this.testSet, false);
 		//Build Training Set from File
-		enumerateFromFile(trainingSetFile, this.trainingSet);
+		enumerateFromFile(trainingSetFile, this.trainingSet, true);
 
 		List<Iris> nearestNeighbours = new ArrayList<Iris>(); //will be filled to K within the loop below
 		double minPetalLength = 0; //Smallest value
@@ -62,14 +63,14 @@ public class Algorithm {
 			}
 		}
 		//The minimum and maximum values should be calculated, so now we have to calculate the four ranges
-		
+
 		rangePetalWidth = maxPetalWidth-minPetalWidth;
 		rangePetalLength = maxPetalLength - minPetalLength;
 		rangeSepalWidth = maxSepalWidth - minSepalWidth;
 		rangeSepalLength = maxSepalLength - minSepalLength;
-		
-		
-		
+
+
+
 		//Loop around Irises (For each Iris in testset, loop through each Iris in trainingset
 		for(Iris i:testSet){
 			for(Iris x:trainingSet){
@@ -78,9 +79,7 @@ public class Algorithm {
 				//Calculate lengths between the two objects based on distance formula
 				double distance = Math.sqrt((Math.pow((i.getPetalWidth()-x.getPetalWidth()),2)/Math.pow(rangePetalWidth,2)) + (Math.pow((i.getPetalLength()-x.getPetalLength()),2)/Math.pow(rangePetalLength,2)) + (Math.pow((i.getSepalWidth()-x.getSepalWidth()),2)/Math.pow(rangeSepalWidth,2)) + (Math.pow((i.getSepalLength()-x.getSepalLength()),2)/Math.pow(rangeSepalLength,2)));
 				//Loop until K to find the K nearest neighbours based on calculated distance
-				for(int c = 0; c < k ; c++){
-					
-				}
+
 				//inside loop,if the set of neighbours contains less than K values, add the current training iris.
 				//Else add the curent training Iris iff it has a closer distance than the one at current point in the loop
 
@@ -90,6 +89,42 @@ public class Algorithm {
 		}
 
 
+	}
+
+	/**
+	 * Checks the neighbour list of the Iris in the test set. Updates the list if required.
+	 * @param distanceCheck
+	 * @param test
+	 * @param training
+	 */
+	public void checkNeighbour(double distanceCheck, Iris test, Iris training){
+		if(test.getNeighbours().size() < k-1){ //The map has less elements than k, so the current element can be added to the list.
+			test.addNeighbour(training, distanceCheck);
+		}
+		else if(test.getNeighbours().size() == k-1){ //the map is full, so check if the training iris is closer than any of the others
+			Set<Iris> keySet;
+			keySet = test.getNeighbours().keySet();
+
+			for(Iris h : keySet){
+				if(test.getNeighbours().get(h) > distanceCheck){
+					test.addNeighbour(training, distanceCheck); //Add it. This means there is one too many neighbours in the map though, so the highest distance value needs to be removed.
+					keySet = test.getNeighbours().keySet(); //Update the keyset
+					break;
+				}
+			}
+
+			Iris tempHighest;
+			Double tempHighestDouble;
+			
+
+
+
+
+
+		}
+		else{
+			System.out.println("Something wierd happened and there are too many values in the nearest neighbours list for an Iris");
+		}
 	}
 
 	/**
@@ -107,12 +142,15 @@ public class Algorithm {
 
 	}
 
-	public void enumerateFromFile(File file, List<Iris> set){
+	public void enumerateFromFile(File file, List<Iris> set, boolean isTraining){
 		Iris tempIris;
 		try {
 			Scanner sc = new Scanner(file);
 			while(sc.hasNext()){
 				tempIris = new Iris(sc.nextDouble(),sc.nextDouble(), sc.nextDouble(), sc.nextDouble(), sc.next()); //Creates a new data structure, reading in the values from the file
+				if(isTraining == true){
+					tempIris.setTraining(); //sets the flag on each Iris, as to whether is it training or not.
+				}
 				set.add(tempIris);	//adds the new data structure to the list of irises
 			}
 			sc.close();//Efficiency
