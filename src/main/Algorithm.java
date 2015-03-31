@@ -25,14 +25,23 @@ public class Algorithm {
 		
 		List<Iris> nearestNeighbours = new ArrayList<Iris>(); //will be filled to K within the loop below
 		
-		//Loop around Irises (For each Iris in testset, loop through each Iris in trainingset
-		//Calculate lengths between objects based on distance formula
-		//Loop until K to find the three nearest neighbours based on calculated distance
-		//inside loop,if the set of neighbours contains less than K values, add the current training iris.
-		//Else add the curent training Iris iff it has a closer distance than the one at current point in the loop
 		
-		//now that the K nearest neighbours are found, find what the values are classified as, based on the nearest neighbours
-		//Update the training set with the new classifications.
+		
+		//Loop around Irises (For each Iris in testset, loop through each Iris in trainingset
+		for(Iris i:testSet){
+			for(Iris x:trainingSet){
+				
+				
+				//Calculate lengths between objects based on distance formula
+				//Loop until K to find the three nearest neighbours based on calculated distance
+				//inside loop,if the set of neighbours contains less than K values, add the current training iris.
+				//Else add the curent training Iris iff it has a closer distance than the one at current point in the loop
+				
+				//now that the K nearest neighbours are found, find what the values are classified as, based on the nearest neighbours
+				//Update the training set with the new classifications.
+			}
+		}
+		
 
 	}
 

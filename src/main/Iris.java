@@ -12,6 +12,7 @@ public class Iris {
 
 	enum irisType {IrisSetosa, IrisVersicolor, IrisVirginica};	
 	private irisType irisType;
+	private irisType amendedIrisType = null; //If it is null, it has not yet been changed.
 	double sepalLength;
 	double sepalWidth;
 	double petalLength;
@@ -51,6 +52,21 @@ public class Iris {
 
 	}
 
+	/**
+	 * Returns the type of the Iris in String Format
+	 * @return
+	 */
+	public String getType(){
+		if(irisType == irisType.IrisSetosa){
+			return "Setosa";
+		}
+		else if(irisType == irisType.IrisVersicolor){
+			return "Versicolor";
+		}
+		else{
+			return "Virginica";
+		}
+	}
 	
 	/**
 	 * Returns the Petal Width of the current Iris in Cm
@@ -82,6 +98,23 @@ public class Iris {
 	 */
 	public double getSepalLength(){
 		return this.sepalLength;
+	}
+	
+	/**
+	 * If the iris type gets changed by the algorithm, this method will get called.
+	 * @param type
+	 */
+	public void setNewIrisType(String type){
+		if(type == "Setosa"){
+			this.amendedIrisType = irisType.IrisSetosa;
+		}
+		else if(type == "Versicolor"){
+			this.amendedIrisType = irisType.IrisSetosa;
+			
+		}
+		else if(type == "Virginica"){
+			this.amendedIrisType = irisType.IrisVirginica;
+			}
 	}
 
 
