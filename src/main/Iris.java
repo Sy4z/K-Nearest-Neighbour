@@ -1,5 +1,8 @@
 package main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Iris {
 /**
@@ -17,6 +20,8 @@ public class Iris {
 	double sepalWidth;
 	double petalLength;
 	double petalWidth;
+	boolean isTraining = false;
+	List<Iris> nearestNeighbours = new ArrayList<Iris>(); //This will only be needed if this is from the test set. Contains a set of the K nearest neighbours to this Iris. These will be used in classification of the Iris
 
 	/**
 	 * All Parameters are measured in Centimeters(Cm)	
@@ -115,6 +120,13 @@ public class Iris {
 		else if(type == "Virginica"){
 			this.amendedIrisType = irisType.IrisVirginica;
 			}
+	}
+	
+	/**
+	 * Setter to turn on the check inside this object to tell whether its from the Training set, or not.
+	 */
+	public void setTraining(){
+		isTraining = true;
 	}
 
 
