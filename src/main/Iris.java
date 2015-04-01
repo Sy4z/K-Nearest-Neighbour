@@ -3,15 +3,16 @@ package main;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 
 public class Iris {
-/**
- * This Class is a data structure created that holds the values of each Iris Object. These can be inserted into a list
- * and used as a better and cleaner way of dealing with the data.
- * @author syaz
- *
- */
+	/**
+	 * This Class is a data structure created that holds the values of each Iris Object. These can be inserted into a list
+	 * and used as a better and cleaner way of dealing with the data.
+	 * @author syaz
+	 *
+	 */
 
 
 	enum irisType {IrisSetosa, IrisVersicolor, IrisVirginica};	
@@ -73,7 +74,7 @@ public class Iris {
 			return "Virginica";
 		}
 	}
-	
+
 	/**
 	 * Returns the Petal Width of the current Iris in Cm
 	 * @return Petal Width of Iris
@@ -81,7 +82,7 @@ public class Iris {
 	public double getPetalWidth(){
 		return this.petalWidth;
 	}
-	
+
 	/**
 	 * Returns the Petal Length of the current Iris in Cm
 	 * @return Petal Length of Iris
@@ -89,7 +90,7 @@ public class Iris {
 	public double getPetalLength(){
 		return this.petalLength;
 	}
-	
+
 	/**
 	 * Returns the Sepal Width of the current Iris in Cm
 	 * @return Sepal Width of Iris
@@ -97,7 +98,7 @@ public class Iris {
 	public double getSepalWidth(){
 		return this.sepalWidth;
 	}
-	
+
 	/**
 	 * Returns the Sepal Length of the current Iris in Cm
 	 * @return Sepal Length of Iris
@@ -105,7 +106,7 @@ public class Iris {
 	public double getSepalLength(){
 		return this.sepalLength;
 	}
-	
+
 	/**
 	 * If the iris type gets changed by the algorithm, this method will get called.
 	 * @param type
@@ -115,14 +116,14 @@ public class Iris {
 			this.amendedIrisType = irisType.IrisSetosa;
 		}
 		else if(type == "Versicolor"){
-			this.amendedIrisType = irisType.IrisSetosa;
-			
+			this.amendedIrisType = irisType.IrisVersicolor;
+
 		}
 		else if(type == "Virginica"){
 			this.amendedIrisType = irisType.IrisVirginica;
-			}
+		}
 	}
-	
+
 	/**
 	 * Setter to turn on the check inside this object to tell whether its from the Training set, or not.
 	 */
@@ -138,13 +139,76 @@ public class Iris {
 	public void addNeighbour(Iris neighbour, double distance){
 		nearestNeighbours.put(neighbour, new Double(distance));
 	}
-	
+
 	/**
 	 * Returns the list of nearest neighbours so Algorithm can see it.
 	 * @return
 	 */
 	public HashMap<Iris, Double> getNeighbours(){
 		return nearestNeighbours;
+	}
+
+	/**
+	 * Helper method returning the new iristype, if it is different
+	 * @return
+	 */
+	public irisType getNewClassification(){
+		if(amendedIrisType != irisType){
+			return amendedIrisType;
+		}
+		else{
+			return irisType;
+		}
+	}
+
+	/**
+	 * Helper method that always returns the original irisType
+	 */
+	public irisType getIrisType(){
+		return irisType;
+	}
+
+
+
+	/**
+	 * Made to be called from algorithm, places a new classification on this Iris
+	 * Can only work if this Iris originated from the test set
+	 */
+	public void calculateClassification(){
+		if(this.isTraining == false){ //check to make sure wierd stuff doesn't happen. Makes sure this method can only be called if this is from the test set
+
+			int[] classifications = new int[3];
+			Set<Iris> irisSet = nearestNeighbours.keySet();
+			for(Iris d : irisSet){
+
+				if(d.getType().equals("Setosa")){
+					classifications[0]++;
+				}
+				else if(d.getType().equals("Versicolor")){
+					classifications[1]++;
+				}
+				else{ //Virginica
+					classifications[2]++;
+				}
+			}
+
+			//find the highest element in the array of votes (Will be the new type of this Iris)
+			int highest = Math.max(Math.max(classifications[0], classifications[1]), classifications[2]);
+
+			if(highest == classifications[0]){
+				this.amendedIrisType = irisType.IrisSetosa;
+			}
+			else if(highest == classifications[1]){
+				this.amendedIrisType = irisType.IrisVersicolor;
+			}
+			else{
+				this.amendedIrisType = irisType.IrisVirginica;
+			}
+
+		}
+		else{
+			System.out.println("This Iris was not a Test Iris");
+		}
 	}
 
 }

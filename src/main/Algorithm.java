@@ -19,7 +19,10 @@ public class Algorithm {
 	double rangeSepalWidth;
 	List<Iris> trainingSet = new ArrayList<Iris>(); //Contains Training Set
 	List<Iris> testSet = new ArrayList<Iris>(); //Contains Test Set
-	public int k = 3; //k value (How many of the nearest test values will be used to decide on the type of the training value)
+	public int k = 1; //k value (How many of the nearest test values will be used to decide on the type of the training value)
+	public int numTestsChanged = 0;//This will tally the number of test irises changed by the algorithm in total
+	public int totalTestIrises = 0;
+
 
 	public Algorithm(File testSetFile, File trainingSetFile) {
 		//Build TestSet from File
@@ -78,20 +81,27 @@ public class Algorithm {
 
 				//Calculate lengths between the two objects based on distance formula
 				double distance = Math.sqrt((Math.pow((i.getPetalWidth()-x.getPetalWidth()),2)/Math.pow(rangePetalWidth,2)) + (Math.pow((i.getPetalLength()-x.getPetalLength()),2)/Math.pow(rangePetalLength,2)) + (Math.pow((i.getSepalWidth()-x.getSepalWidth()),2)/Math.pow(rangeSepalWidth,2)) + (Math.pow((i.getSepalLength()-x.getSepalLength()),2)/Math.pow(rangeSepalLength,2)));
-				
+
 				checkNeighbour(distance, i, x); //Once distance is calculated, we can try to populate the list of neighbours.
-				
-				
-				
-				//Loop until K to find the K nearest neighbours based on calculated distance
 
-				//inside loop,if the set of neighbours contains less than K values, add the current training iris.
-				//Else add the curent training Iris iff it has a closer distance than the one at current point in the loop
 
-				//now that the K nearest neighbours are found, find what the values are classified as, based on the nearest neighbours
-				//Update the training set with the new classifications.
+
 			}
 		}
+
+
+
+		for(Iris a : testSet){
+			a.calculateClassification();
+			if(a.getNewClassification() != a.getIrisType()){
+				System.out.println("There is a new classification!" + a.getNewClassification());
+				numTestsChanged++;
+			}
+			totalTestIrises ++;
+		}
+
+		System.out.println(numTestsChanged + "/" + totalTestIrises + " Total Irises were amended by the algorithm");
+
 
 
 	}
@@ -120,7 +130,7 @@ public class Algorithm {
 
 
 			Object[] mapKeyArray = keySet.toArray();
-			
+
 			Iris tempHighest = null;
 			Double tempHighestDouble = null;
 
@@ -129,20 +139,20 @@ public class Algorithm {
 				tempHighestDouble = test.getNeighbours().get(tempHighest); //get the distance
 			}
 			for(Iris h : keySet){ //Loop over everything in the keyset to check if its higher than the current highest value
-				System.out.println("The distance value for this combo is: " + distanceCheck);
-				System.out.println("The petal widths of the Irises in the array after its been cast are: " + h.getPetalWidth()); //Bugchecks to make sure the elements in the final array survived after being converted to a set, then made generic, then typecast again.
+				//System.out.println("The distance value for this combo is: " + distanceCheck);
+				//System.out.println("The petal widths of the Irises in the array after its been cast are: " + h.getPetalWidth()); //Bugchecks to make sure the elements in the final array survived after being converted to a set, then made generic, then typecast again.
 				if(test.getNeighbours().get(h) > tempHighestDouble.doubleValue()){
 					tempHighest = h;
 					tempHighestDouble = test.getNeighbours().get(h);
 				}
 			}
-			
-			System.out.println("This is printing after the nearest neighbours loop has been executed: " + test.getNeighbours().get(tempHighest));
+
+			//System.out.println("This is printing after the nearest neighbours loop has been executed: " + test.getNeighbours().get(tempHighest));
 			//The highest of the neighbours has now been found, so remove it from the hashmap in the test Iris
-			System.out.println("The size of the Hashmap is: " + test.getNeighbours().size());
+			//System.out.println("The size of the Hashmap is: " + test.getNeighbours().size());
 			if(test.getNeighbours().size() > k){ //If the amount of elements in the map is higher than k, we have too many and we remove the highest
-				
-			test.getNeighbours().remove(tempHighest);
+
+				test.getNeighbours().remove(tempHighest);
 			}
 
 
