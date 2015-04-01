@@ -78,6 +78,11 @@ public class Algorithm {
 
 				//Calculate lengths between the two objects based on distance formula
 				double distance = Math.sqrt((Math.pow((i.getPetalWidth()-x.getPetalWidth()),2)/Math.pow(rangePetalWidth,2)) + (Math.pow((i.getPetalLength()-x.getPetalLength()),2)/Math.pow(rangePetalLength,2)) + (Math.pow((i.getSepalWidth()-x.getSepalWidth()),2)/Math.pow(rangeSepalWidth,2)) + (Math.pow((i.getSepalLength()-x.getSepalLength()),2)/Math.pow(rangeSepalLength,2)));
+				
+				checkNeighbour(distance, i, x); //Once distance is calculated, we can try to populate the list of neighbours.
+				
+				
+				
 				//Loop until K to find the K nearest neighbours based on calculated distance
 
 				//inside loop,if the set of neighbours contains less than K values, add the current training iris.
@@ -98,10 +103,10 @@ public class Algorithm {
 	 * @param training
 	 */
 	public void checkNeighbour(double distanceCheck, Iris test, Iris training){
-		if(test.getNeighbours().size() < k-1){ //The map has less elements than k, so the current element can be added to the list.
+		if(test.getNeighbours().size() < k){ //The map has less elements than k, so the current element can be added to the list.
 			test.addNeighbour(training, distanceCheck);
 		}
-		else if(test.getNeighbours().size() == k-1){ //the map is full, so check if the training iris is closer than any of the others
+		else if(test.getNeighbours().size() == k){ //the map is full, so check if the training iris is closer than any of the others
 			Set<Iris> keySet;
 			keySet = test.getNeighbours().keySet();
 
@@ -115,24 +120,30 @@ public class Algorithm {
 
 
 			Object[] mapKeyArray = keySet.toArray();
-			Iris[] castArray = (Iris[]) mapKeyArray;
-
+			
 			Iris tempHighest = null;
 			Double tempHighestDouble = null;
 
 			if(tempHighest == null || tempHighestDouble == null){ //If there is no values
-				tempHighest = castArray[0]; //Get the first value
+				tempHighest = (Iris) mapKeyArray[0]; //Get the first value to start
 				tempHighestDouble = test.getNeighbours().get(tempHighest); //get the distance
 			}
-			for(Iris h : castArray){
+			for(Iris h : keySet){ //Loop over everything in the keyset to check if its higher than the current highest value
+				System.out.println("The distance value for this combo is: " + distanceCheck);
 				System.out.println("The petal widths of the Irises in the array after its been cast are: " + h.getPetalWidth()); //Bugchecks to make sure the elements in the final array survived after being converted to a set, then made generic, then typecast again.
 				if(test.getNeighbours().get(h) > tempHighestDouble.doubleValue()){
 					tempHighest = h;
 					tempHighestDouble = test.getNeighbours().get(h);
 				}
 			}
+			
+			System.out.println("This is printing after the nearest neighbours loop has been executed: " + test.getNeighbours().get(tempHighest));
 			//The highest of the neighbours has now been found, so remove it from the hashmap in the test Iris
+			System.out.println("The size of the Hashmap is: " + test.getNeighbours().size());
+			if(test.getNeighbours().size() > k){
+				
 			test.getNeighbours().remove(tempHighest);
+			}
 
 
 
