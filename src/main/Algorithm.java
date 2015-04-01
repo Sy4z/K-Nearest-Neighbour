@@ -140,7 +140,7 @@ public class Algorithm {
 			System.out.println("This is printing after the nearest neighbours loop has been executed: " + test.getNeighbours().get(tempHighest));
 			//The highest of the neighbours has now been found, so remove it from the hashmap in the test Iris
 			System.out.println("The size of the Hashmap is: " + test.getNeighbours().size());
-			if(test.getNeighbours().size() > k){
+			if(test.getNeighbours().size() > k){ //If the amount of elements in the map is higher than k, we have too many and we remove the highest
 				
 			test.getNeighbours().remove(tempHighest);
 			}
